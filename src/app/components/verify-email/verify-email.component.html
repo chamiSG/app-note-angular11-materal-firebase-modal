@@ -1,0 +1,19 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Thank You for Registering</mat-card-title>
+    </mat-card-header>
+    <div class="formGroup" *ngIf="authService.userData as user">
+      <p class="text-center">We have sent a confirmation email to <strong>{{user.email}}</strong>.</p>
+      <p class="text-center">Please check your email and click on the link to verfiy your email address.</p>
+    </div>
+
+    <form class="example-form">
+      <button mat-stroked-button color="accent" class="btn-block" (click)="authService.SendVerificationMail()">Resend Verification Email</button>
+      <div class="redirectToLogin">
+        <span>Go back to ? <span class="redirect" routerLink="/sign-in">Sign In</span></span>
+      </div>
+    </form>
+  </mat-card>
+</div>

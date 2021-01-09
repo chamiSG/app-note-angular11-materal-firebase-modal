@@ -1,0 +1,24 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+
+  <mat-card class="box">
+    <mat-card-header>
+      <mat-card-title>Sign In</mat-card-title>
+    </mat-card-header>
+
+    <form class="example-form">
+      <mat-card-content>
+        <mat-form-field class="example-full-width">
+          <input matInput type="email" placeholder="Email Address" #userName required>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+          <input matInput type="password" placeholder="Password" #userPassword required>
+        </mat-form-field>
+      </mat-card-content>
+      <button mat-stroked-button color="accent" class="btn-block" (click)="authService.SignIn(userName.value, userPassword.value)">Log in</button>
+    </form>
+    <div class="redirectToLogin">
+      <span>Don't have an account?<span class="redirect" routerLink="/register-user"> Sign Up</span></span>
+    </div>
+  </mat-card>
+</div>
