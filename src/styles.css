@@ -98,6 +98,7 @@ body {
 
 .login-wrapper .mat-card {
   padding: 40px 70px 50px;
+  box-sizing:unset;
 }
 
 .login-wrapper .mat-stroked-button {
@@ -120,3 +121,26 @@ body {
 .redirect:focus{
   outline: none ;
 }
+
+.modal-content {
+  color: rgb(245, 233, 233);
+  background-color: #feffcc !important;
+}
+.modal-header{
+  background-color: #fbe69b;
+}
+.title-note{
+  color:#303030 !important;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0px !important;
+}
+textarea.form-control.form-control-alternative.note-body {
+  background: rgb(0 0 0 / 0%);
+  box-shadow: none;
+  color: #000 !important;
+}
+::placeholder {
+  color: #353535 !important;
+}
+

@@ -22,8 +22,26 @@ export class AuthService {
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public ngZone: NgZone, // NgZone service to remove outside scope warning
-    private http: HttpClient, private router: Router, private eventService: EventService<string>
+    public router: Router
   ) {    
+    
+
+  }
+  
+  // Returns true when user is looged in and email is verified
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return (user !== null) ? true : false;
+  }
+
+  // Returns true when user is looged in and email is verified
+  get email(): string {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return user.email;
+  }
+
+  // Sign in with email/password
+  SignIn(email, password) {
     /* Saving user data in localstorage when 
     logged in and setting up null when logged out */
     this.afAuth.authState.subscribe(user => {
@@ -36,17 +54,7 @@ export class AuthService {
         JSON.parse(localStorage.getItem('user'));
       }
     })
-
-  }
-  
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return (user !== null && user.emailVerified !== false) ? true : false;
-  }
-
-  // Sign in with email/password
-  SignIn(email, password) {
+    
     return firebase.auth().signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.ngZone.run(() => {
@@ -64,7 +72,9 @@ export class AuthService {
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
-        this.SendVerificationMail();
+        this.ngZone.run(() => {
+          this.router.navigate(['sign-in']);
+        });
         this.SetUserData(result.user);
       }).catch((error) => {
         window.alert(error.message)

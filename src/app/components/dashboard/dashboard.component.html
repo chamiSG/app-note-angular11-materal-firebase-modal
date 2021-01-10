@@ -1,18 +1,92 @@
-<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
-
-  <mat-card class="box">
-    <mat-card-header>
-      <mat-card-title>Das</mat-card-title>
-    </mat-card-header>
-    <p class="text-center">Please enter your email address to request a password reset.</p>
-    <!-- Calling SignOut Api from AuthService -->
-    <div class="formGroup">
-      <input type="button" class="btn btnPrimary" value="Log in" (click)="authService.SignOut()">
-    </div>
-  </mat-card>
-
-  <li>
-    <button mat-raised-button (click)="openDialog()">Add</button>
-  </li>
+<main>
+  <div class="position-relative">
+    <!-- shape Hero -->
+    <section class="section section-lg section-shaped pb-250">
+      <div class="shape shape-style-1 shape-default">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="container py-lg-sm d-flex">
+        <div class="col px-0">
+          <div class="row">
+            <div class="col-lg-12">
+              <h1 class="display-2  text-white text-center"><i class="ni ni-book-bookmark ni-1x"></i> Note
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- SVG separator -->
+      <div class="separator separator-bottom separator-skew">
+        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </section>
+    <!-- 1st Hero Variation -->
+  </div>
   
-</div>
+  <section class="section section-lg pt-lg-0 mt--200">
+
+        <div class="col-lg-12">
+          <div class="row row-grid">
+            
+            <div class="col-lg-3">
+                <div class="modal-content card-lift--hover" style="margin-bottom: 30px">
+                  <div class="modal-header">
+                    <div class="col-md-11 title-note">
+                      <a class="modal-title"><i class="fas fa-plus"></i> Add Note</a>
+                    </div>
+                    <div class="col-md-1 title-note" style="text-align: right;">
+                      <a href="javascript:void(0)" class="modal-title"  (click)="saveNote()"><i class="fas fa-save" style="padding-right:10px"></i></a>
+                    </div>
+                    
+                  </div>
+                  <div class="modal-body">
+                    <div class="py-3 text-center">
+                      <div class="form-group">
+                        <textarea class="form-control form-control-alternative note-body" name="name" rows="10" cols="100" placeholder="Type a message..." name="content"
+                        [(ngModel)]="note.content" required></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3" 
+              *ngFor="let note of notes; let i = index"
+              [class.active]="i == currentIndex"
+              (click)="setActiveNote(note, i)">
+              <div class="modal-content card-lift--hover" style="margin-bottom: 30px">
+                <div class="modal-header">
+                  <div class="col-md-10 title-note">
+                    <span>{{note.createdDate}}</span>
+                  </div>
+                  <div class="col-md-1 title-note" style="text-align: right;">
+                    <a href="javascript:void(0)" class="modal-title"  (click)="updateCurrentNote()"><i class="fas fa-save" style="padding-right:10px"></i></a>
+                  </div>
+                  <div class="col-md-1 title-note" style="text-align: right;">
+                    <a href="javascript:void(0)" class="modal-title" (click)="setActiveNote(note, i); deleteCurrentNote()"><i class="fas fa-trash-alt"></i></a>
+                  </div>
+                </div>
+                <div class="modal-body">
+                  <div class="py-3 text-center">
+                    <div class="form-group">
+                      <textarea class="form-control form-control-alternative note-body" name="content" [(ngModel)]="note.content" value="{{ note.content }}" rows="10" cols="100" required></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+  </section>
+</main>

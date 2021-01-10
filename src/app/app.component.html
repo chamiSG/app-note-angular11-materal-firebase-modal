@@ -1,13 +1,13 @@
+
 <!-- Toolbar -->
 <mat-toolbar color="primary" class="app-header">
   <div><a href="#" target="_blank" class="positronx">Britannica Knowledge Systems</a></div>
-
     <span class="nav-tool-items">
+      <a *ngIf="authService.isLoggedIn !== false"><span *ngIf="authService.email" style="margin-right: 20px;">{{authService.email}}</span></a>
       <a *ngIf="authService.isLoggedIn !== true" mat-button routerLink="sign-in" routerLinkActive="active">Sign In</a>
       <a *ngIf="authService.isLoggedIn !== true" mat-button mat-raised-button routerLink="register-user" routerLinkActive="active">Sign Up</a>
       <a *ngIf="authService.isLoggedIn !== false" mat-button mat-raised-button routerLink="sign-in" routerLinkActive="active" (click)="authService.SignOut()">Sign Out</a>
     </span>
 </mat-toolbar>
-
 
 <router-outlet></router-outlet>

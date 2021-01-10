@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { Post } from '../../models/Post';
+import { Note } from '../../models/note';
 
 @Component({
   selector: 'app-modal',
@@ -11,7 +11,7 @@ export class ModalComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Post) {}
+    @Inject(MAT_DIALOG_DATA) public data: Note) {}
 
   onNoClick(): void {
     this.dialogRef.close();
