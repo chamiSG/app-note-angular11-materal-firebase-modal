@@ -21,6 +21,13 @@
               </h1>
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-6 offset-md-3 ">
+              <button class="btn btn-block btn-warning mb-3" (click)="openDialog()">
+                Add Note
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- SVG separator -->
@@ -34,59 +41,34 @@
   </div>
   
   <section class="section section-lg pt-lg-0 mt--200">
+    <div class="col-lg-12">
+      
+      <div class="row row-grid">
 
-        <div class="col-lg-12">
-          <div class="row row-grid">
-            
-            <div class="col-lg-3">
-                <div class="modal-content card-lift--hover" style="margin-bottom: 30px">
-                  <div class="modal-header">
-                    <div class="col-md-11 title-note">
-                      <a class="modal-title"><i class="fas fa-plus"></i> Add Note</a>
-                    </div>
-                    <div class="col-md-1 title-note" style="text-align: right;">
-                      <a href="javascript:void(0)" class="modal-title"  (click)="saveNote()"><i class="fas fa-save" style="padding-right:10px"></i></a>
-                    </div>
-                    
-                  </div>
-                  <div class="modal-body">
-                    <div class="py-3 text-center">
-                      <div class="form-group">
-                        <textarea class="form-control form-control-alternative note-body" name="name" rows="10" cols="100" placeholder="Type a message..." name="content"
-                        [(ngModel)]="note.content" required></textarea>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3" 
-              *ngFor="let note of notes; let i = index"
-              [class.active]="i == currentIndex"
-              (click)="setActiveNote(note, i)">
-              <div class="modal-content card-lift--hover" style="margin-bottom: 30px">
-                <div class="modal-header">
-                  <div class="col-md-10 title-note">
-                    <span>{{note.createdDate}}</span>
-                  </div>
-                  <div class="col-md-1 title-note" style="text-align: right;">
-                    <a href="javascript:void(0)" class="modal-title"  (click)="updateCurrentNote()"><i class="fas fa-save" style="padding-right:10px"></i></a>
-                  </div>
-                  <div class="col-md-1 title-note" style="text-align: right;">
-                    <a href="javascript:void(0)" class="modal-title" (click)="setActiveNote(note, i); deleteCurrentNote()"><i class="fas fa-trash-alt"></i></a>
-                  </div>
-                </div>
-                <div class="modal-body">
-                  <div class="py-3 text-center">
-                    <div class="form-group">
-                      <textarea class="form-control form-control-alternative note-body" name="content" [(ngModel)]="note.content" value="{{ note.content }}" rows="10" cols="100" required></textarea>
-                    </div>
-                  </div>
-                </div>
+        <div class="col-lg-3 col-md-6" 
+          *ngFor="let note of notes; let i = index"
+          >
+          <div class="modal-content card-lift--hover" style="margin-bottom: 30px">
+            <div class="modal-header">
+              <div class="col-md-10 title-note">
+                <span>{{note.author}}</span><br/>
+                <span>{{note.createdDate}}</span>
+              </div>
+              <div class="col-md-1 title-note" style="text-align: right;">
+                <a href="javascript:void(0)" class="modal-title"  (click)="setActiveNote(note, i); editDialog()"><i class="fas fa-edit" style="padding-right:10px"></i></a>
+              </div>
+              <div class="col-md-1 title-note" style="text-align: right;">
+                <a href="javascript:void(0)" class="modal-title" (click)="setActiveNote(note, i); deleteCurrentNote()"><i class="fas fa-trash-alt"></i></a>
               </div>
             </div>
-
+            <div class="modal-body">
+              <div class="py-3 title-note">
+                <p>{{note.content}}</p>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
   </section>
 </main>

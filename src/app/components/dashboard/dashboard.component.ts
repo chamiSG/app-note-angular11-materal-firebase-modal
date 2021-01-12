@@ -1,14 +1,10 @@
 import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { AuthService } from "../../shared/services/auth.service";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppComponent } from '../../app.component';
 import { ModalComponent } from '../modal/modal.component';
 import { Note } from '../../models/note';
 import { DatePipe } from '@angular/common';
 import { NoteService } from 'src/app/shared/services/note.service';
-import { Router, ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -23,38 +19,55 @@ export class DashboardComponent implements OnInit {
 
   @Input() updateNote?: Note;
   @Output() refreshLists: EventEmitter<any> = new EventEmitter();
+  @Output() keyEvent = new EventEmitter<string>();
 
   focus: any;
   focus1: any;
-  
+  author: string;
   content: string;
-
   noteData = new Note();
-  formTitle = 'Add';
+  note: Note = new Note();
+  submitted = false;
+  notes?: Note[];
+  currentNote?: Note;
+  currentIndex = -1;
+  message = '';
 
   constructor(
     public authService: AuthService,
     private datePipe: DatePipe,
-    private noteService: NoteService
+    private noteService: NoteService,
+    public dialog: MatDialog
     ) {
   }
-
-  note: Note = new Note();
-  submitted = false;
-
-  notes?: Note[];
-  currentNote?: Note;
-  currentIndex = -1;
-
-  message = '';
 
   ngOnInit(): void {
     this.retrieveNotes();
   }
 
-  ngOnChanges(): void {
-    this.message = '';
-    this.currentNote = { ...this.updateNote };
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ModalComponent, {
+      width: '500px',
+      data: {author: this.author, content: this.content},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      this.content = result;
+    });
+  }
+ 
+  editDialog(): void {
+    let key = this.currentNote.key;
+
+    const dialogRef = this.dialog.open(ModalComponent, {
+      width: '500px',
+    });
+    dialogRef.componentInstance.key = key;
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      this.content = result;
+    });
   }
 
   refreshList(): void {
@@ -80,42 +93,7 @@ export class DashboardComponent implements OnInit {
     this.currentIndex = index;
   }
 
-  removeAllNotes(): void {
-    this.noteService.deleteAll()
-      .then(() => this.refreshList())
-      .catch(err => console.log(err));
-  }
-
-
-  //Save Note//
-  saveNote(): void {
-    this.note.createdDate = this.datePipe.transform(Date.now(), 'MM-dd-yyyy HH:mm');
-    this.noteService.create(this.note).then(() => {
-      console.log('Created new item successfully!');
-      this.submitted = true;
-    });
-  }
-
-  newNote(): void {
-    this.submitted = false;
-    this.note = new Note();
-  }
-
-  updateCurrentNote(): void {
-    const data = {
-      content: this.currentNote.content,
-      createdDate: this.datePipe.transform(Date.now(), 'MM-dd-yyyy HH:mm')
-    };
-
-    if (this.currentNote.key) {
-      this.noteService.update(this.currentNote.key, data)
-        .then(() => this.message = 'The Note was updated successfully!')
-        .catch(err => console.log(err));
-    }
-  }
-
   deleteCurrentNote(): void {
-    console.log(this.currentNote);
     if (this.currentNote.key) {
       this.noteService.delete(this.currentNote.key)
         .then(() => {
@@ -125,5 +103,4 @@ export class DashboardComponent implements OnInit {
         .catch(err => console.log(err));
     }
   }
-
 }

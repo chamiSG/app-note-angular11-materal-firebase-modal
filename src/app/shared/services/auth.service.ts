@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { User } from "../services/user";
 import firebase from 'firebase/app';
 
@@ -9,7 +8,8 @@ import 'firebase/firestore';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
-import { EventService } from './event.service';
+import { Observable, BehaviorSubject } from 'rxjs';
+import IdleTimer from "../../IdleTimer";
 
 @Injectable({
   providedIn: 'root'
@@ -17,57 +17,78 @@ import { EventService } from './event.service';
 
 export class AuthService {
   userData: any; // Save logged in user data
+  user: Observable<firebase.User>;
+  timer: any;
+
+  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public ngZone: NgZone, // NgZone service to remove outside scope warning
-    public router: Router
+    public router: Router,
   ) {    
-    
 
+  }
+
+  email() {
+    var user = firebase.auth().currentUser;
+    var  email
+    if (user != null) {
+      email = user.email;
+      return email
+    }
+  }
+
+  updateExpireDate() {
+    const expireDate = new Date();
+    expireDate.setMinutes(expireDate.getMinutes() + 0.5);
+    localStorage.setItem('ExpireDate', expireDate.toLocaleString());
+  }
+
+  get isLoggedIn() {
+    if(localStorage.getItem('loggedIn') === '1'){
+      this.loggedIn.next(true);
+    }
+    
+    return this.loggedIn.asObservable();
   }
   
-  // Returns true when user is looged in and email is verified
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return (user !== null) ? true : false;
-  }
-
-  // Returns true when user is looged in and email is verified
-  get email(): string {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user.email;
-  }
-
   // Sign in with email/password
   SignIn(email, password) {
-    /* Saving user data in localstorage when 
-    logged in and setting up null when logged out */
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this.userData = user;
-        localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user'));
-      } else {
-        localStorage.setItem('user', null);
-        JSON.parse(localStorage.getItem('user'));
-      }
-    })
-    
-    return firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((result) => {
-        this.ngZone.run(() => {
-          this.router.navigate(['dashboard']);
-        });
-        this.SetUserData(result.user);
-      }).catch((error) => {
-        window.alert(error.message)
+
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    .then(() => {
+      return firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((result) => {
+          this.ngZone.run(() => {
+            this.loggedIn.next(true);
+            localStorage.setItem('loggedIn', '1');
+
+            this.timer = new IdleTimer({
+              timeout: 5 * 60, //expired after 5 mins
+              onTimeout: () => {
+                this.SignOut();
+              }
+            });
+            this.router.navigate(['dashboard']);
+          });
+          this.SetUserData(result.user);
+        }).catch((error) => {
+          window.alert(error.message)
+        })
       })
+    .catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
+    
   }
 
   // Sign up with email/password
   SignUp(email, password) {
+      
     return firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
@@ -80,7 +101,6 @@ export class AuthService {
         window.alert(error.message)
       })
   }
-
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
     return firebase.auth().currentUser.sendEmailVerification()
@@ -98,9 +118,6 @@ export class AuthService {
       window.alert(error)
     })
   }
-
-  
-
   // Auth logic to run auth providers
   AuthLogin(provider) {
     return firebase.auth().signInWithPopup(provider)
@@ -134,7 +151,8 @@ export class AuthService {
   // Sign out 
   SignOut() {
     return firebase.auth().signOut().then(() => {
-      localStorage.removeItem('user');
+      localStorage.removeItem('loggedIn');
+      this.loggedIn.next(false);
       this.router.navigate(['sign-in']);
     })
   }
