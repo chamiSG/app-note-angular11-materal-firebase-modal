@@ -3,10 +3,8 @@
     <div class="col-md-11 title-note">
       <h1 *ngIf="key == undefined" mat-dialog-title class="modal-title">Add Note</h1>
       <h1 *ngIf="key != undefined" mat-dialog-title class="modal-title">Update Note</h1>
-      
     </div>
   </div>
-
   <div class="modal-body" >
     <div mat-dialog-content>
       <mat-form-field>
@@ -26,5 +24,3 @@
     <button type="button" class="btn btn-link text-primary ml-auto" note-dismiss="modal" (click)="onNoClick()">Close</button>
   </div>
 </div>
-
-

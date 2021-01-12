@@ -27,9 +27,7 @@ export class AuthService {
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public ngZone: NgZone, // NgZone service to remove outside scope warning
     public router: Router,
-  ) {    
-
-  }
+  ) { }
 
   email() {
     var user = firebase.auth().currentUser;
@@ -38,12 +36,6 @@ export class AuthService {
       email = user.email;
       return email
     }
-  }
-
-  updateExpireDate() {
-    const expireDate = new Date();
-    expireDate.setMinutes(expireDate.getMinutes() + 0.5);
-    localStorage.setItem('ExpireDate', expireDate.toLocaleString());
   }
 
   get isLoggedIn() {
@@ -56,7 +48,6 @@ export class AuthService {
   
   // Sign in with email/password
   SignIn(email, password) {
-
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
     .then(() => {
       return firebase.auth().signInWithEmailAndPassword(email, password)
@@ -64,7 +55,6 @@ export class AuthService {
           this.ngZone.run(() => {
             this.loggedIn.next(true);
             localStorage.setItem('loggedIn', '1');
-
             this.timer = new IdleTimer({
               timeout: 5 * 60, //expired after 5 mins
               onTimeout: () => {
@@ -83,12 +73,10 @@ export class AuthService {
       var errorCode = error.code;
       var errorMessage = error.message;
     });
-    
   }
 
   // Sign up with email/password
   SignUp(email, password) {
-      
     return firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
@@ -101,6 +89,7 @@ export class AuthService {
         window.alert(error.message)
       })
   }
+
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
     return firebase.auth().currentUser.sendEmailVerification()
@@ -118,6 +107,7 @@ export class AuthService {
       window.alert(error)
     })
   }
+
   // Auth logic to run auth providers
   AuthLogin(provider) {
     return firebase.auth().signInWithPopup(provider)
@@ -156,5 +146,4 @@ export class AuthService {
       this.router.navigate(['sign-in']);
     })
   }
-
 }

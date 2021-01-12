@@ -12,10 +12,8 @@ import { map } from 'rxjs/operators';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   providers: [DatePipe]
-
 })
 export class DashboardComponent implements OnInit {
-
 
   @Input() updateNote?: Note;
   @Output() refreshLists: EventEmitter<any> = new EventEmitter();
