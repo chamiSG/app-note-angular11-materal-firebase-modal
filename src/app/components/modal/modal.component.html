@@ -1,11 +1,30 @@
-<h1 mat-dialog-title>{{data.content}}</h1>
-<div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data.content">
-  </mat-form-field>
+<div class="modal-content">
+  <div class="modal-header">
+    <div class="col-md-11 title-note">
+      <h1 *ngIf="key == undefined" mat-dialog-title class="modal-title">Add Note</h1>
+      <h1 *ngIf="key != undefined" mat-dialog-title class="modal-title">Update Note</h1>
+      
+    </div>
+  </div>
+
+  <div class="modal-body" >
+    <div mat-dialog-content>
+      <mat-form-field>
+        <input matInput type="text" class="form-control form-control-alternative note-body" name="author" [(ngModel)]="note.author" placeholder="Author"  required/>
+      </mat-form-field>
+      <mat-form-field>
+        <div class="form-group">
+          <textarea matInput class="form-control form-control-alternative note-body" rows="10" cols="100" placeholder="Type a message..." name="content"
+          [(ngModel)]="note.content" required></textarea>
+        </div>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button *ngIf="key == undefined" type="button" class="btn btn-primary" [mat-dialog-close]="note.content" cdkFocusInitial (click)="saveNote()">Save</button>
+    <button *ngIf="key != undefined" type="button" class="btn btn-primary" [mat-dialog-close]="note.content" cdkFocusInitial  (click)="saveNote()">Update</button>
+    <button type="button" class="btn btn-link text-primary ml-auto" note-dismiss="modal" (click)="onNoClick()">Close</button>
+  </div>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.content" cdkFocusInitial>Save</button>
-</div>
+
+

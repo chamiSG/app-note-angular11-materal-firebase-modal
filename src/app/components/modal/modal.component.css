@@ -1,0 +1,8 @@
+.mat-dialog-title{
+  margin: 0px;
+}
+
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+  padding: 0px !important;
+}
