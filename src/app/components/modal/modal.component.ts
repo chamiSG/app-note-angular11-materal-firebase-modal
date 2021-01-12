@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Inject, OnChanges, Output, EventEmitter } from '@angular/core';
 import { AuthService } from "../../shared/services/auth.service";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Note } from '../../models/note';
 import { DatePipe } from '@angular/common';
 import { NoteService } from 'src/app/shared/services/note.service';
