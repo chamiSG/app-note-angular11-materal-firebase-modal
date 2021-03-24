@@ -3,6 +3,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.5.
 
+## Feature
+Angluar 10, Angluar Material and Firebase
+* Auth
+* Sticky Note add
+* Sticky Note edit
+* Sticky Note list
+* Sticky Note delete
+
 ## Dependencies Install
 ```
 npm install
